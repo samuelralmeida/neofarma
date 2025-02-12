@@ -1,0 +1,9 @@
+POST http://localhost:3000/patients/save HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Samuel Local 01",
+	"cpf": "15598744535",
+	"email": "samuel@teste.com",
+	"phone": "319123654789"
+}
