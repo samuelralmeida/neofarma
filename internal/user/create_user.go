@@ -10,7 +10,7 @@ import (
 )
 
 func (u *UserUseCases) Create(ctx context.Context, input *CreateUserInputDto) (*UserOutputDto, error) {
-	_, err := u.LoggedUsedPermission(ctx, AdminHierarchy)
+	_, err := u.LoggedUserPermission(ctx, AdminHierarchy)
 	if err != nil {
 		return nil, fmt.Errorf("error to authorize logged user to create new user: %w", err)
 	}

@@ -34,9 +34,9 @@ func main() {
 	defer firestoreClient.Close()
 
 	firestoreRepository := firestore.NewFirestoreRepository(firestoreClient)
-
-	patientUseCases := patient.NewPatientUseCases(firestoreRepository)
 	userUseCases := user.NewUserUseCases(firestoreRepository)
+
+	patientUseCases := patient.NewPatientUseCases(firestoreRepository, userUseCases)
 
 	webHandler := handlers.NewWebHandler(patientUseCases, userUseCases)
 

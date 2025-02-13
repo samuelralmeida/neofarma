@@ -2,9 +2,17 @@ package patient
 
 import (
 	"context"
+	"fmt"
+
+	"github.com/samuelralmeida/neofarma/internal/user"
 )
 
 func (s *PatientUseCases) Save(ctx context.Context, input *NewPatientInputDto) (*PatientOutputDto, error) {
+	_, err := s.userUseCases.LoggedUserPermission(ctx, user.AdminHierarchy)
+	if err != nil {
+		return nil, fmt.Errorf("error to authorize logged user to create new user: %w", err)
+	}
+
 	patient := Patient{
 		Name:  input.Name,
 		Cpf:   input.Cpf,
@@ -12,7 +20,7 @@ func (s *PatientUseCases) Save(ctx context.Context, input *NewPatientInputDto) (
 		Phone: input.Phone,
 	}
 
-	err := s.patientRepository.SavePatient(ctx, &patient)
+	err = s.patientRepository.SavePatient(ctx, &patient)
 	if err != nil {
 		return nil, err
 	}

@@ -23,7 +23,7 @@ func (u *UserUseCases) getUserFromContext(ctx context.Context) *User {
 	return user
 }
 
-func (u *UserUseCases) LoggedUsedPermission(ctx context.Context, hierarchy HierarchyRole) (*User, error) {
+func (u *UserUseCases) LoggedUserPermission(ctx context.Context, hierarchy HierarchyRole) (*User, error) {
 	user := u.getUserFromContext(ctx)
 	if user == nil {
 		return nil, errors.New("user not logged")
