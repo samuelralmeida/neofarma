@@ -30,7 +30,7 @@ func init() {
 
 //	@title			Swagger Example API
 //	@version		1.0
-//	@description	This is a sample server Petstore server.
+//	@description	This is a sample Neofarma server.
 //	@termsOfService	http://swagger.io/terms/
 
 //	@contact.name	API Support
