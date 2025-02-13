@@ -16,6 +16,9 @@ import (
 	customMiddlewares "github.com/samuelralmeida/neofarma/external/web/middlewares"
 	"github.com/samuelralmeida/neofarma/internal/patient"
 	"github.com/samuelralmeida/neofarma/internal/user"
+
+	_ "github.com/samuelralmeida/neofarma/external/web/docs"
+	httpSwagger "github.com/swaggo/http-swagger/v2"
 )
 
 func init() {
@@ -25,6 +28,20 @@ func init() {
 	}
 }
 
+//	@title			Swagger Example API
+//	@version		1.0
+//	@description	This is a sample server Petstore server.
+//	@termsOfService	http://swagger.io/terms/
+
+//	@contact.name	API Support
+//	@contact.url	http://www.swagger.io/support
+//	@contact.email	support@swagger.io
+
+//	@license.name	Apache 2.0
+//	@license.url	http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host		http://localhost:3000
+// @BasePath	/v2
 func main() {
 	ctx := context.Background()
 	firestoreClient, err := firestore.NewFirestoreClient(ctx)
@@ -57,6 +74,8 @@ func main() {
 		w.WriteHeader(405)
 		w.Write([]byte("method is not valid"))
 	})
+
+	r.Get("/swagger/*", httpSwagger.WrapHandler)
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("welcome"))

@@ -1,0 +1,186 @@
+basePath: /v2
+definitions:
+  patient.NewPatientInputDto:
+    properties:
+      cpf:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      phone:
+        type: string
+    type: object
+  patient.PatientOutputDto:
+    properties:
+      cpf:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      phone:
+        type: string
+    type: object
+  user.CreateUserInputDto:
+    properties:
+      email:
+        type: string
+      origin:
+        type: string
+      password:
+        type: string
+      role:
+        type: string
+    type: object
+  user.UserOutputDto:
+    properties:
+      email:
+        type: string
+      id:
+        type: string
+      role:
+        type: string
+    type: object
+host: http://localhost:3000
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a sample server Petstore server.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Swagger Example API
+  version: "1.0"
+paths:
+  /admin/create:
+    post:
+      consumes:
+      - application/json
+      description: Cria um novo usuário com os dados fornecidos e retorna os detalhes
+        do usuário, incluindo um cookie de autenticação.
+      parameters:
+      - description: Dados do novo usuário
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/user.CreateUserInputDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Usuário criado com sucesso
+          schema:
+            $ref: '#/definitions/user.UserOutputDto'
+        "400":
+          description: Erro de validação dos dados
+          schema:
+            type: string
+        "500":
+          description: Erro interno do servidor
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Cria um novo usuário
+      tags:
+      - Auth
+  /patients/save:
+    post:
+      consumes:
+      - application/json
+      description: Recebe os dados de um novo paciente e os salva no sistema.
+      parameters:
+      - description: Dados do paciente
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/patient.NewPatientInputDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Paciente salvo com sucesso
+          schema:
+            $ref: '#/definitions/patient.PatientOutputDto'
+        "400":
+          description: Erro de validação dos dados
+          schema:
+            type: string
+        "500":
+          description: Erro interno do servidor
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Salva um novo paciente
+      tags:
+      - Patients
+  /users/signin:
+    post:
+      consumes:
+      - application/json
+      description: Autentica um usuário com email e senha fornecidos e retorna um
+        cookie para manter a sessão do usuário.
+      parameters:
+      - description: user email
+        in: body
+        name: email
+        required: true
+        schema:
+          type: string
+      - description: user password
+        in: body
+        name: password
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Autenticação bem-sucedida
+          schema:
+            type: string
+        "400":
+          description: Erro de validação dos dados
+          schema:
+            type: string
+        "500":
+          description: Erro interno do servidor
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Autentica um usuário e retorna um cookie de autenticação
+      tags:
+      - User
+  /users/signout:
+    post:
+      consumes:
+      - application/json
+      description: Remove o cookie de autenticação do usuário, invalidando a sessão.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Desconexão bem-sucedida
+          schema:
+            type: string
+        "500":
+          description: Erro interno do servidor
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Desconecta o usuário removendo o cookie de autenticação
+      tags:
+      - Auth
+swagger: "2.0"
