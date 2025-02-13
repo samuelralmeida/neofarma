@@ -16,3 +16,11 @@ func NewFirestoreClient(ctx context.Context) (*firestore.Client, error) {
 
 	return client, nil
 }
+
+type FirestoreRepository struct {
+	client *firestore.Client
+}
+
+func NewFirestoreRepository(client *firestore.Client) *FirestoreRepository {
+	return &FirestoreRepository{client: client}
+}

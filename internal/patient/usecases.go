@@ -3,8 +3,8 @@ package patient
 import "context"
 
 type PatientRepository interface {
-	Save(context.Context, *Patient) error
-	GetById(ctx context.Context, id string) (*Patient, error)
+	SavePatient(context.Context, *Patient) error
+	GetPatientById(ctx context.Context, id string) (*Patient, error)
 }
 
 type PatientUseCases struct {

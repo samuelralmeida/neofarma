@@ -4,20 +4,11 @@ import (
 	"context"
 	"fmt"
 
-	"cloud.google.com/go/firestore"
 	"github.com/samuelralmeida/neofarma/internal/patient"
 )
 
-type FirestoreRepository struct {
-	client *firestore.Client
-}
-
-func NewFirestoreRepository(client *firestore.Client) *FirestoreRepository {
-	return &FirestoreRepository{client: client}
-}
-
-func (f *FirestoreRepository) Save(ctx context.Context, patient *patient.Patient) error {
-	documentRef, _, err := f.client.Collection("patient").Add(ctx, map[string]interface{}{
+func (f *FirestoreRepository) SavePatient(ctx context.Context, patient *patient.Patient) error {
+	documentRef, _, err := f.client.Collection("patients").Add(ctx, map[string]interface{}{
 		"cpf":   patient.Cpf,
 		"email": patient.Email,
 		"name":  patient.Name,
@@ -31,8 +22,8 @@ func (f *FirestoreRepository) Save(ctx context.Context, patient *patient.Patient
 	return nil
 }
 
-func (f *FirestoreRepository) GetById(ctx context.Context, id string) (*patient.Patient, error) {
-	doc, err := f.client.Collection("patient").Doc(id).Get(ctx)
+func (f *FirestoreRepository) GetPatientById(ctx context.Context, id string) (*patient.Patient, error) {
+	doc, err := f.client.Collection("patients").Doc(id).Get(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("error to get patient by id: %w", err)
 	}

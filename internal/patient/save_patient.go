@@ -12,7 +12,7 @@ func (s *PatientUseCases) Save(ctx context.Context, input *NewPatientInputDto) (
 		Phone: input.Phone,
 	}
 
-	err := s.patientRepository.Save(ctx, &patient)
+	err := s.patientRepository.SavePatient(ctx, &patient)
 	if err != nil {
 		return nil, err
 	}

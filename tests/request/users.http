@@ -1,0 +1,26 @@
+POST http://localhost:3000/admin/create HTTP/1.1
+content-type: application/json
+Cookie: neofarma-auth=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJuZW9mYXJtYSIsInN1YiI6IjNFT01oYW5pbThvYVJpb0pCV090IiwiZXhwIjoxNzM5NDc2MjUzfQ.3jcf4oQ8eDB6cicTQ6MVKvxiVbdiFUd-o0UObb4XMtM; Path=/; HttpOnly; Secure; SameSite=Strict
+
+{
+    "email": "samuel2@neofarma.com.br",
+    "role": "client",
+    "password": "1234567",
+    "origin": "external"
+}
+
+###
+
+POST http://localhost:3000/users/signin HTTP/1.1
+content-type: application/json
+
+{
+    "email": "samuel.sousa@neofarma.com.br",
+    "password": "123456"
+}
+
+###
+
+POST http://localhost:3000/users/signout HTTP/1.1
+content-type: application/json
+Cookie: neofarma-auth=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJuZW9mYXJtYSIsInN1YiI6IjNFT01oYW5pbThvYVJpb0pCV090IiwiZXhwIjoxNzM5NDc2MjUzfQ.3jcf4oQ8eDB6cicTQ6MVKvxiVbdiFUd-o0UObb4XMtM; Path=/; HttpOnly; Secure; SameSite=Strict

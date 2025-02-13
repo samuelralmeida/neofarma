@@ -6,7 +6,7 @@ import (
 )
 
 func (s *PatientUseCases) GetById(ctx context.Context, id string) (*PatientOutputDto, error) {
-	patient, err := s.patientRepository.GetById(ctx, id)
+	patient, err := s.patientRepository.GetPatientById(ctx, id)
 	if err != nil {
 		return nil, fmt.Errorf("error to get patient by id: %w", err)
 	}
