@@ -15,6 +15,7 @@ import (
 	"github.com/samuelralmeida/neofarma/external/web/handlers"
 	customMiddlewares "github.com/samuelralmeida/neofarma/external/web/middlewares"
 	"github.com/samuelralmeida/neofarma/internal/patient"
+	responsibilityUC "github.com/samuelralmeida/neofarma/internal/responsibility/usecases"
 	"github.com/samuelralmeida/neofarma/internal/user"
 
 	_ "github.com/samuelralmeida/neofarma/external/web/docs"
@@ -51,11 +52,12 @@ func main() {
 	defer firestoreClient.Close()
 
 	firestoreRepository := firestore.NewFirestoreRepository(firestoreClient)
+
 	userUseCases := user.NewUserUseCases(firestoreRepository)
-
 	patientUseCases := patient.NewPatientUseCases(firestoreRepository, userUseCases)
+	responsibilityUseCases := responsibilityUC.NewResponsibilityUseCases(firestoreRepository, userUseCases, patientUseCases)
 
-	webHandler := handlers.NewWebHandler(patientUseCases, userUseCases)
+	webHandler := handlers.NewWebHandler(patientUseCases, userUseCases, responsibilityUseCases)
 
 	r := chi.NewRouter()
 	r.Use(middleware.RequestID)
@@ -93,6 +95,11 @@ func main() {
 	r.Route("/users", func(r chi.Router) {
 		r.Post("/signin", webHandler.SignIn)
 		r.Post("/signout", webHandler.SignOut)
+	})
+
+	r.Route("/responsibilities", func(r chi.Router) {
+		r.Post("/create", webHandler.CreateRelationship)
+		r.Post("/remove", webHandler.RemoveRelationship)
 	})
 
 	log.Println("listening...", os.Getenv("PORT"))

@@ -17,11 +17,17 @@ type UserUseCases interface {
 	Authenticate(ctx context.Context, email, password string) (*user.User, error)
 }
 
+type ResponsibilityUseCases interface {
+	LinkUserToPatient(ctx context.Context, userID, patientID, relationshipType string) error
+	UnlinkUserFromPatient(ctx context.Context, userID, patientID, relationshipType string) error
+}
+
 type WebHandler struct {
 	PatientUseCases
 	UserUseCases
+	ResponsibilityUseCases
 }
 
-func NewWebHandler(patientUseCases PatientUseCases, userUseCases UserUseCases) *WebHandler {
-	return &WebHandler{PatientUseCases: patientUseCases, UserUseCases: userUseCases}
+func NewWebHandler(patientUseCases PatientUseCases, userUseCases UserUseCases, responsibilityUseCases ResponsibilityUseCases) *WebHandler {
+	return &WebHandler{PatientUseCases: patientUseCases, UserUseCases: userUseCases, ResponsibilityUseCases: responsibilityUseCases}
 }

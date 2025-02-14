@@ -123,6 +123,94 @@ paths:
       summary: Salva um novo paciente
       tags:
       - Patients
+  /responsibilities/remove:
+    post:
+      consumes:
+      - application/json
+      description: Recebe os dados de paciente, usuário e tipo de relação
+      parameters:
+      - description: user id
+        in: body
+        name: userId
+        required: true
+        schema:
+          type: string
+      - description: patient id
+        in: body
+        name: patientId
+        required: true
+        schema:
+          type: string
+      - description: relationship type
+        in: body
+        name: bond
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Relação removida com sucesso
+          schema:
+            type: string
+        "400":
+          description: Erro de validação dos dados
+          schema:
+            type: string
+        "500":
+          description: Erro interno do servidor
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Remove relação entre usuário e paciente
+      tags:
+      - Responsibility
+  /responsibilities/save:
+    post:
+      consumes:
+      - application/json
+      description: Recebe os dados de paciente, usuário e tipo de relação
+      parameters:
+      - description: user id
+        in: body
+        name: userId
+        required: true
+        schema:
+          type: string
+      - description: patient id
+        in: body
+        name: patientId
+        required: true
+        schema:
+          type: string
+      - description: relationship type
+        in: body
+        name: bond
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: relação criada com sucesso
+          schema:
+            type: string
+        "400":
+          description: Erro de validação dos dados
+          schema:
+            type: string
+        "500":
+          description: Erro interno do servidor
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Criar uma relação entre usuário e paciente
+      tags:
+      - Responsibility
   /users/signin:
     post:
       consumes:

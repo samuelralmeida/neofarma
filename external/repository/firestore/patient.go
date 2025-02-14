@@ -7,8 +7,27 @@ import (
 	"github.com/samuelralmeida/neofarma/internal/patient"
 )
 
+const patientsCollectionName = "patients"
+
+type storePatient struct {
+	Cpf   string `firestore:"cpf"`
+	Email string `firestore:"email"`
+	Name  string `firestore:"name"`
+	Phone string `firestore:"phone"`
+}
+
+func (sp *storePatient) toPatient(id string) patient.Patient {
+	return patient.Patient{
+		Name:  sp.Name,
+		Cpf:   sp.Cpf,
+		Phone: sp.Phone,
+		ID:    id,
+		Email: sp.Email,
+	}
+}
+
 func (f *FirestoreRepository) SavePatient(ctx context.Context, patient *patient.Patient) error {
-	documentRef, _, err := f.client.Collection("patients").Add(ctx, map[string]interface{}{
+	documentRef, _, err := f.client.Collection(patientsCollectionName).Add(ctx, map[string]interface{}{
 		"cpf":   patient.Cpf,
 		"email": patient.Email,
 		"name":  patient.Name,
@@ -23,7 +42,7 @@ func (f *FirestoreRepository) SavePatient(ctx context.Context, patient *patient.
 }
 
 func (f *FirestoreRepository) GetPatientById(ctx context.Context, id string) (*patient.Patient, error) {
-	doc, err := f.client.Collection("patients").Doc(id).Get(ctx)
+	doc, err := f.client.Collection(patientsCollectionName).Doc(id).Get(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("error to get patient by id: %w", err)
 	}
