@@ -83,25 +83,26 @@ func (f *FirestoreRepository) GetPatientsByUser(ctx context.Context, userID stri
 		patientIds = append(patientIds, s.PatientID)
 	}
 
-	iterP := f.client.Collection(patientsCollectionName).Where("id", "in", patientIds).Documents(ctx)
-	defer iterP.Stop()
+	patientCollection := f.client.Collection(patientsCollectionName)
+	docs := make([]*firestore.DocumentRef, len(patientIds))
+	for i, id := range patientIds {
+		docs[i] = patientCollection.Doc(id)
+	}
+
+	snapshots, err := f.client.GetAll(ctx, docs)
+	if err != nil {
+		return nil, fmt.Errorf("error to get all patients: %w", err)
+	}
 
 	patients := map[string]storePatient{}
-	for {
-		doc, err := iterP.Next()
-		if err == iterator.Done {
-			break
-		}
-		if err != nil {
-			return nil, fmt.Errorf("error to get patients by user: %w", err)
-		}
-
+	for _, snapshot := range snapshots {
 		var s storePatient
-		err = doc.DataTo(&s)
+
+		err = snapshot.DataTo(&s)
 		if err != nil {
-			return nil, fmt.Errorf("error to populate user: %w", err)
+			return nil, fmt.Errorf("error to populate patient: %w", err)
 		}
-		patients[doc.Ref.ID] = s
+		patients[snapshot.Ref.ID] = s
 	}
 
 	result := make([]responsibility.PatientWithRelationship, len(responsibilities))
@@ -140,25 +141,26 @@ func (f *FirestoreRepository) GetUsersByPatient(ctx context.Context, patientID s
 		userIds = append(userIds, s.PatientID)
 	}
 
-	iterP := f.client.Collection(userCollectionName).Where("id", "in", userIds).Documents(ctx)
-	defer iterP.Stop()
+	userCollection := f.client.Collection(userCollectionName)
+	docs := make([]*firestore.DocumentRef, len(userIds))
+	for i, id := range userIds {
+		docs[i] = userCollection.Doc(id)
+	}
+
+	snapshots, err := f.client.GetAll(ctx, docs)
+	if err != nil {
+		return nil, fmt.Errorf("error to get all patients: %w", err)
+	}
 
 	users := map[string]storeUser{}
-	for {
-		doc, err := iterP.Next()
-		if err == iterator.Done {
-			break
-		}
-		if err != nil {
-			return nil, fmt.Errorf("error to get patients by user: %w", err)
-		}
-
+	for _, snapshot := range snapshots {
 		var s storeUser
-		err = doc.DataTo(&s)
+
+		err = snapshot.DataTo(&s)
 		if err != nil {
-			return nil, fmt.Errorf("error to populate user: %w", err)
+			return nil, fmt.Errorf("error to populate patient: %w", err)
 		}
-		users[doc.Ref.ID] = s
+		users[snapshot.Ref.ID] = s
 	}
 
 	result := make([]responsibility.UserWithRelationship, len(responsibilities))

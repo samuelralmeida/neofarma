@@ -126,7 +126,96 @@ const docTemplate = `{
                 }
             }
         },
-        "/responsibilities/remove": {
+        "/patients/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Devolve os usuário que tem relação com o paciente informado",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Relationship"
+                ],
+                "summary": "Lista os usuários com relação ao paciente",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "user id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Dados do paciente",
+                        "schema": {
+                            "$ref": "#/definitions/patient.PatientOutputDto"
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/patients/{id}/users/relationships": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Devolve os usuário que tem relação com o paciente informado",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Relationship"
+                ],
+                "summary": "Lista os usuários com relação ao paciente",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "patient id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Usuários com relação com o paciente informado",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/responsibility.UserWithRelationship"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/relationships/remove": {
             "post": {
                 "security": [
                     {
@@ -141,7 +230,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Responsibility"
+                    "Relationship"
                 ],
                 "summary": "Remove relação entre usuário e paciente",
                 "parameters": [
@@ -195,7 +284,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/responsibilities/save": {
+        "/relationships/save": {
             "post": {
                 "security": [
                     {
@@ -210,7 +299,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Responsibility"
+                    "Relationship"
                 ],
                 "summary": "Criar uma relação entre usuário e paciente",
                 "parameters": [
@@ -357,6 +446,52 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/users/{id}/patients/relationships": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Devolve os usuário que tem relação com o paciente informado",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Relationship"
+                ],
+                "summary": "Lista os usuários com relação ao paciente",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "user id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Pacientes com relação com o usuário informado",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/responsibility.PatientWithRelationship"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -367,6 +502,26 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                }
+            }
+        },
+        "patient.Patient": {
+            "type": "object",
+            "properties": {
+                "cpf": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
                     "type": "string"
                 },
                 "name": {
@@ -397,6 +552,34 @@ const docTemplate = `{
                 }
             }
         },
+        "responsibility.PatientWithRelationship": {
+            "type": "object",
+            "properties": {
+                "patient": {
+                    "$ref": "#/definitions/patient.Patient"
+                },
+                "relationshipType": {
+                    "type": "string"
+                },
+                "userId": {
+                    "type": "string"
+                }
+            }
+        },
+        "responsibility.UserWithRelationship": {
+            "type": "object",
+            "properties": {
+                "patientId": {
+                    "type": "string"
+                },
+                "relationshipType": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/user.User"
+                }
+            }
+        },
         "user.CreateUserInputDto": {
             "type": "object",
             "properties": {
@@ -411,6 +594,51 @@ const docTemplate = `{
                 },
                 "role": {
                     "type": "string"
+                }
+            }
+        },
+        "user.Permission": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "user.Role": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "permissions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/user.Permission"
+                    }
+                }
+            }
+        },
+        "user.User": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "origin": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "role": {
+                    "$ref": "#/definitions/user.Role"
                 }
             }
         },

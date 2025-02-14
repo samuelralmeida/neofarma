@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/samuelralmeida/neofarma/internal/patient"
+	"github.com/samuelralmeida/neofarma/internal/responsibility"
 	"github.com/samuelralmeida/neofarma/internal/user"
 )
 
@@ -20,6 +21,8 @@ type UserUseCases interface {
 type ResponsibilityUseCases interface {
 	LinkUserToPatient(ctx context.Context, userID, patientID, relationshipType string) error
 	UnlinkUserFromPatient(ctx context.Context, userID, patientID, relationshipType string) error
+	ListUsersByPatient(ctx context.Context, patientID string) ([]responsibility.UserWithRelationship, error)
+	ListPatientsByUser(ctx context.Context, userID string) ([]responsibility.PatientWithRelationship, error)
 }
 
 type WebHandler struct {

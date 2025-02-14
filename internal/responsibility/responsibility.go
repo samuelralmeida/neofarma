@@ -6,15 +6,15 @@ import (
 )
 
 type PatientWithRelationship struct {
-	Patient          patient.Patient
-	RelationshipType string
-	UserID           string
+	Patient          patient.Patient `json:"patient"`
+	RelationshipType string          `json:"relationshipType"`
+	UserID           string          `json:"userId"`
 }
 
 type UserWithRelationship struct {
-	User             user.User
-	RelationshipType string
-	PatientID        string
+	User             user.User `json:"user"`
+	RelationshipType string    `json:"relationshipType"`
+	PatientID        string    `json:"patientId"`
 }
 
 type RelationshipType string

@@ -86,6 +86,7 @@ func main() {
 	r.Route("/patients", func(r chi.Router) {
 		r.Post("/save", webHandler.SavePatient)
 		r.Get("/{id}", webHandler.GetPatientById)
+		r.Get("/{id}/users/relationships", webHandler.ListUsersByPatient)
 	})
 
 	r.Route("/admin", func(r chi.Router) {
@@ -95,9 +96,10 @@ func main() {
 	r.Route("/users", func(r chi.Router) {
 		r.Post("/signin", webHandler.SignIn)
 		r.Post("/signout", webHandler.SignOut)
+		r.Get("/{id}/patients/relationships", webHandler.ListPatientsByUser)
 	})
 
-	r.Route("/responsibilities", func(r chi.Router) {
+	r.Route("/relationships", func(r chi.Router) {
 		r.Post("/create", webHandler.CreateRelationship)
 		r.Post("/remove", webHandler.RemoveRelationship)
 	})

@@ -1,17 +1,14 @@
-POST http://localhost:3000/patients/save HTTP/1.1
+POST http://localhost:3000/responsibilities/create HTTP/1.1
 content-type: application/json
 cookie: neofarma-auth=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJuZW9mYXJtYSIsInN1YiI6IjNFT01oYW5pbThvYVJpb0pCV090IiwiZXhwIjoxNzM5NTU2ODY4fQ.WY15R_A1RudzRR3p7XzCFL9J74K_hkwPQ4FFc6M9clI; Path=/; HttpOnly; Secure; SameSite=Strict
 
 {
-    "name": "Samuel Local 02",
-	"cpf": "15598744535",
-	"email": "samuel@teste.com",
-	"phone": "319123654789"
+    "userId": "Ev6L7bD0ffw4PAdr1sHE",
+	"patientId": "z9ki08a3hiaqly0UkJs3",
+	"bond": "clinical"
 }
 
 ###
 
-GET  http://localhost:3000/patients/z9ki08a3hiaqly0UkJs3 HTTP/1.1
+GET http://localhost:3000/users/Ev6L7bD0ffw4PAdr1sHE/patients/relationships HTTP/1.1
 content-type: application/json
-
-###

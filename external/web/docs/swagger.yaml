@@ -11,6 +11,19 @@ definitions:
       phone:
         type: string
     type: object
+  patient.Patient:
+    properties:
+      cpf:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      phone:
+        type: string
+    type: object
   patient.PatientOutputDto:
     properties:
       cpf:
@@ -24,6 +37,24 @@ definitions:
       phone:
         type: string
     type: object
+  responsibility.PatientWithRelationship:
+    properties:
+      patient:
+        $ref: '#/definitions/patient.Patient'
+      relationshipType:
+        type: string
+      userId:
+        type: string
+    type: object
+  responsibility.UserWithRelationship:
+    properties:
+      patientId:
+        type: string
+      relationshipType:
+        type: string
+      user:
+        $ref: '#/definitions/user.User'
+    type: object
   user.CreateUserInputDto:
     properties:
       email:
@@ -34,6 +65,35 @@ definitions:
         type: string
       role:
         type: string
+    type: object
+  user.Permission:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+    type: object
+  user.Role:
+    properties:
+      name:
+        type: string
+      permissions:
+        items:
+          $ref: '#/definitions/user.Permission'
+        type: array
+    type: object
+  user.User:
+    properties:
+      email:
+        type: string
+      id:
+        type: string
+      origin:
+        type: string
+      password:
+        type: string
+      role:
+        $ref: '#/definitions/user.Role'
     type: object
   user.UserOutputDto:
     properties:
@@ -91,6 +151,62 @@ paths:
       summary: Cria um novo usuário
       tags:
       - Auth
+  /patients/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Devolve os usuário que tem relação com o paciente informado
+      parameters:
+      - description: user id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Dados do paciente
+          schema:
+            $ref: '#/definitions/patient.PatientOutputDto'
+        "500":
+          description: Erro interno do servidor
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Lista os usuários com relação ao paciente
+      tags:
+      - Relationship
+  /patients/{id}/users/relationships:
+    get:
+      consumes:
+      - application/json
+      description: Devolve os usuário que tem relação com o paciente informado
+      parameters:
+      - description: patient id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Usuários com relação com o paciente informado
+          schema:
+            items:
+              $ref: '#/definitions/responsibility.UserWithRelationship'
+            type: array
+        "500":
+          description: Erro interno do servidor
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Lista os usuários com relação ao paciente
+      tags:
+      - Relationship
   /patients/save:
     post:
       consumes:
@@ -123,7 +239,7 @@ paths:
       summary: Salva um novo paciente
       tags:
       - Patients
-  /responsibilities/remove:
+  /relationships/remove:
     post:
       consumes:
       - application/json
@@ -166,8 +282,8 @@ paths:
       - ApiKeyAuth: []
       summary: Remove relação entre usuário e paciente
       tags:
-      - Responsibility
-  /responsibilities/save:
+      - Relationship
+  /relationships/save:
     post:
       consumes:
       - application/json
@@ -210,7 +326,36 @@ paths:
       - ApiKeyAuth: []
       summary: Criar uma relação entre usuário e paciente
       tags:
-      - Responsibility
+      - Relationship
+  /users/{id}/patients/relationships:
+    get:
+      consumes:
+      - application/json
+      description: Devolve os usuário que tem relação com o paciente informado
+      parameters:
+      - description: user id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Pacientes com relação com o usuário informado
+          schema:
+            items:
+              $ref: '#/definitions/responsibility.PatientWithRelationship'
+            type: array
+        "500":
+          description: Erro interno do servidor
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Lista os usuários com relação ao paciente
+      tags:
+      - Relationship
   /users/signin:
     post:
       consumes:
